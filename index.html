@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <!-- コンテンツ表示画面 -->
+    <div id="output"> </div>
+    <h1>チャットなのかい？</h1>
+    <div>
+        <div>
+          Name<br><input type="text" id="uname">
+        </div>
+
+        <div>
+          Message<br><textarea id ="text" row="10"></textarea>
+    <br>
+    <br>
+        <button id="send">send</button>
+        </div>
+
+    </div>
+
+
+<!--Jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--Jquery-->
+
+<script type="module">
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js";
+import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js";
+
+// Your web app's Firebase configuration
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig); //initializeAppという関数を使ってfirebaseにアクセス
+const db = getDatabase(app); //getDatabaseという関数を使うとリアルタイムDBにアクセス
+const dbRef = ref(db, "chat"); //リアルタイムDBの"chat"
+
+
+//送信: 送信ボタンを押す場合
+// $("#send").on("click", function(){
+//     const now = new Date();
+//     const msg = { //オブジェクト変数
+//         uname : $("#uname").val(),
+//         text : $("#text").val(),
+//         date : now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日' + now.getHours() + '時' + now.getMinutes() + '分'
+//     }
+//     const newPostRef = push(dbRef); //ユニークキーを生成。そうしないと上書きされてしまう
+//     set(newPostRef,msg);
+// });
+
+
+//送信: エンターキーで送信する場合
+$("#text").on("keydown", function (e) {
+        console.log(e);
+        if (e.keyCode === 13) {
+          const uname = $("#uname").val();
+          const text = $("#text").val();
+
+          //入力されたものが取得できているか確認
+          console.log(uname, "名前");
+          console.log(text, "テキスト");
+
+          // データの塊を作成
+          const now = new Date();
+          const msg = { //オブジェクト変数
+            uname : $("#uname").val(),
+            text : $("#text").val(),
+            date : now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日' + now.getHours() + '時' + now.getMinutes() + '分'
+        };
+
+          const newPostRef = push(dbRef); //ユニークキーを生成。そうしないと上書きされてしまう
+          set(newPostRef, msg);
+
+          // 入力欄を空にする
+          $("#uname").val(""); //空にする
+          $("#text").val(""); //空にする
+        }
+      });
+
+
+
+
+//受信
+onChildAdded(dbRef, function(data){
+    const msg = data.val();
+    const key = data.key; //ユニークキーを取得
+    let h = "<div class='balloon'>";
+        h += "<p>";
+        h += "<div>From: "+msg.uname+" </div>";
+        h += msg.text;
+        h += "<br>";
+        h += msg.date;
+        h += "</p>";
+        h += "<input type='button' id='deleteBtn' value='削除'>"
+        h += "</div>";
+        $("#output").append(h); //一番最後に差し込んでいく
+});
+
+
+//ボタンをクリックして削除
+$("#deleteBtn").on("click", function(){
+
+	remove(dbRef);
+});
+
+
+</script>
+</body>
+</html>
