@@ -1,0 +1,61 @@
+body {
+    font-family: "Kinto Sans";
+    }
+
+h1 {
+    color: coral;
+    text-align: center;
+}
+
+div {
+    text-align: center;
+}
+
+textarea {
+    vertical-align:top;
+}
+
+button {
+    margin-bottom: 24px;
+}
+
+#uname {
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+#text {
+    margin-top: 8px;
+}
+
+
+#output {
+    margin:  0 auto;
+    width: 500px; 
+    height: 300px;
+    overflow: scroll;
+}
+
+.balloon {
+    position: relative;
+    display: block;
+    margin: 1.5em auto;
+    padding: 7px 10px;
+    min-width: 120px;
+    max-width: 75%;
+    border-radius: 8px;
+    color: #555;
+    font-size: 16px;
+    background: #e0edff;
+  }
+  
+  .balloon:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top: 15px solid #e0edff;
+  }
+
